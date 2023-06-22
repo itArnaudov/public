@@ -57,6 +57,24 @@ resource "azurerm_lb" "internal" {
   }
 }
 
+data "azurerm_storage_account" "example" {
+  name                = "<storage_account_name>"
+  resource_group_name = "<storage_account_resource_group>"
+}
+
+resource "azurerm_network_interface" "example" {
+  count               = 2
+  name                = "my-nic-${count.index}"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  ip_configuration {
+    name                          = "my-ip-config"
+    subnet_id                     = azurerm_subnet.example.id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
 resource "azurerm_virtual_machine" "example" {
   count                 = 2
   name                  = "my-vm-${count.index}"
@@ -90,15 +108,18 @@ resource "azurerm_virtual_machine" "example" {
     provision_vm_agent        = true
   }
 
+#  boot_diagnostics {
+#    enabled            = true
+#    storage_account_uri = data.azurerm_storage_account.example
+#  }
+
+  boot_diagnostics {
+    enabled            = true
+    storage_account_uri = azurerm_storage_account.example.primary_blob_endpoint
+  }
+
   tags = {
     environment = "production"
   }
 }
 
-resource "azurerm_network_interface" "example" {
-  count               = 2
-  name                = "my-nic-${count.index}"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
-
-  ip
