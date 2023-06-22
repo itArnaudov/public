@@ -143,3 +143,59 @@ resource "azurerm_application_gateway" "example" {
     backend_http_settings_name = "app-gateway-backend-http-settings"
   }
 }
+resource "azurerm_network_interface" "example" {
+  count               = 2
+  name                = "my-nic-${count.index}"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  ip_configuration {
+    name                          = "my-ip-config"
+    subnet_id                     = azurerm_subnet.example.id
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+data "azurerm_storage_account" "example" {
+  name                = "<storage_account_name>"
+  resource_group_name = "<storage_account_resource_group>"
+}
+
+resource "azurerm_virtual_machine" "example" {
+  count                 = 2
+  name                  = "my-vm-${count.index}"
+  location              = azurerm_resource_group.example.location
+  resource_group_name   = azurerm_resource_group.example.name
+  network_interface_ids = [azurerm_network_interface.example[count.index].id]
+  vm_size               = "Standard_DS2_v2"
+
+  storage_image_reference {
+    publisher = "MicrosoftWindowsServer"
+    offer     = "WindowsServer"
+    sku       = "2019-Datacenter"
+    version   = "latest"
+  }
+
+  storage_os_disk {
+    name              = "osdisk"
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+
+  os_profile {
+    computer_name  = "myvm${count.index}"
+    admin_username = "adminuser"
+    admin_password = "P@ssword1234!"
+  }
+
+  os_profile_windows_config {
+    enable_automatic_upgrades = true
+    provision_vm_agent        = true
+  }
+
+  boot_diagnostics {
+    enabled            = true
+    storage_account_uri = azurerm_storage_account.example.primary_blob_endpoint
+  }
+}
