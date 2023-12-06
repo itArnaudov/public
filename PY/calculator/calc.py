@@ -88,3 +88,4 @@ if __name__ == "__main__":
 #
 #This updated code includes additional functions for square root, power, and trigonometric operations (sin, cos, tan). The trigonometric functions use degrees as input, and the math.radians function is used to convert degrees to radians before performing the calculations. You can further expand the calculator by adding more functions based on your requirements.
 #
+#
