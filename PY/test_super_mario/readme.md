@@ -4,7 +4,7 @@ To test the Super Mario Python script, you can follow these steps:
    If you don't have Python installed, download and install it from the [official Python website](https://www.python.org/).
 
 2. **Copy the Script:**
-   Copy the Super Mario script provided in the previous response into a new file with a `.py` extension, for example, `super_mario.py`.
+   Copy the Super Mario script provided in the previous response into a new file with a `.py` extension, for example, `super_mario.py`
 
 3. **Run the Script:**
    Open a terminal or command prompt, navigate to the directory where you saved the script, and run the script using the following command:
@@ -23,4 +23,3 @@ This will execute the script.
     After completing the fifth level, the script will print a "Congratulations" message.
 
 Please note that this script provides a basic text-based simulation of Mario's movement and doesn't include user input for controlling Mario. It's a simple representation for illustrative purposes. If you want to enhance the script or add interactive features, you can modify it accordingly.
-
