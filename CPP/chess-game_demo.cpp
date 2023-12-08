@@ -123,9 +123,80 @@ public:
         }
     }
 
-//
+    // Function to check if a pawn move from one position to another is valid
+    bool isValidPawnMove(int fromX, int fromY, int toX, int toY) const {
+        // Pawn can move one square forward (if not occupied)
+        if (board[fromX][fromY].color == PieceColor::White) {
+            return toX == fromX - 1 && toY == fromY && !isOccupied(toX, toY);
+        } else {
+            return toX == fromX + 1 && toY == fromY && !isOccupied(toX, toY);
+        }
+    }
+
+    // Function to check if a rook move from one position to another is valid
+    bool isValidRookMove(int fromX, int fromY, int toX, int toY) const {
+        // Rook can move horizontally or vertically
+        return (fromX == toX || fromY == toY) && !isOccupied(toX, toY);
+    }
+
+    // Function to check if a knight move from one position to another is valid
+    bool isValidKnightMove(int fromX, int fromY, int toX, int toY) const {
+        // Knight moves in an L-shape: two squares in one direction and one square perpendicular
+        int dx = abs(toX - fromX);
+        int dy = abs(toY - fromY);
+        return (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
+    }
+
+    // Function to check if a bishop move from one position to another is valid
+    bool isValidBishopMove(int fromX, int fromY, int toX, int toY) const {
+        // Bishop moves diagonally
+        return abs(toX - fromX) == abs(toY - fromY) && !isOccupied(toX, toY);
+    }
+
+    // Function to check if a queen move from one position to another is valid
+    bool isValidQueenMove(int fromX, int fromY, int toX, int toY) const {
+        // Queen can move horizontally, vertically, or diagonally
+        return (fromX == toX || fromY == toY || abs(toX - fromX) == abs(toY - fromY)) && !isOccupied(toX, toY);
+    }
+
+    // Function to check if a king move from one position to another is valid
+    bool isValidKingMove(int fromX, int fromY, int toX, int toY) const {
+        // King can move one square in any direction
+        int dx = abs(toX - fromX);
+        int dy = abs(toY - fromY);
+        return (dx == 1 || dx == 0) && (dy == 1 || dy == 0) && !isOccupied(toX, toY);
+    }
+
+    // Function to make a move on the chessboard
+    void makeMove(int fromX, int fromY, int toX, int toY) {
+        // Check if the move is valid
+        if (!isValidMove(fromX, fromY, toX, toY)) {
+            std::cout << "Invalid move. Please enter a valid move." << std::endl;
+            return;
+        }
+
+        // Perform the move
+        board[toX][toY] = board[fromX][fromY];
+        board[fromX][fromY] = {}; // Empty the starting position
+
+        std::cout << "Move successful!" << std::endl;
+    }
+};
+
+// Main function
 int main() {
+    // Create a chessboard
     ChessBoard chessBoard;
+    chessBoard.displayBoard();
+
+    // Example moves
+    chessBoard.makeMove(6, 0, 4, 0); // Black pawn moves forward
+    chessBoard.displayBoard();
+
+    chessBoard.makeMove(1, 0, 3, 0); // White pawn moves forward
+    chessBoard.displayBoard();
+
+    chessBoard.makeMove(7, 1, 5, 2); // Black knight moves
     chessBoard.displayBoard();
 
     return 0;
