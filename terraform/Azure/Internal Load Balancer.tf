@@ -42,3 +42,4 @@ resource "azurerm_lb" "internal" {
     probe                      = azurerm_lb.internal.probe[0].name
   }
 }
+#
