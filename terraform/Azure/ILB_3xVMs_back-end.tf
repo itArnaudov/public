@@ -38,11 +38,13 @@ variable "vm_count" {
   default = 3
 }
 
+// Resource Group
 resource "azurerm_resource_group" "iAr" {
   name     = var.resource_group_name
   location = var.location
 }
 
+// Virtual Network
 resource "azurerm_virtual_network" "iAr" {
   name                = var.virtual_network_name
   address_space       = ["10.0.0.0/16"]
@@ -50,13 +52,15 @@ resource "azurerm_virtual_network" "iAr" {
   resource_group_name = azurerm_resource_group.iAr.name
 }
 
+// Subnet
 resource "azurerm_subnet" "iAr" {
   name                 = var.subnet_name
   resource_group_name  = azurerm_resource_group.iAr.name
   virtual_network_name = azurerm_virtual_network.iAr.name
-  address_prefixes    = ["10.0.1.0/24"]
+  address_prefixes     = ["10.0.1.0/24"]
 }
 
+// Network Interfaces
 resource "azurerm_network_interface" "iAr" {
   count               = var.vm_count
   name                = "${var.network_interface_name}-${count.index}"
@@ -70,6 +74,7 @@ resource "azurerm_network_interface" "iAr" {
   }
 }
 
+// Virtual Machines
 resource "azurerm_virtual_machine" "iAr" {
   count                 = var.vm_count
   name                  = "iAr-vm-${count.index}"
@@ -77,7 +82,7 @@ resource "azurerm_virtual_machine" "iAr" {
   resource_group_name   = azurerm_resource_group.iAr.name
   network_interface_ids = [azurerm_network_interface.iAr[count.index].id]
 
-  vm_size     = "Standard_DS1_v2"
+  vm_size                       = "Standard_DS1_v2"
   delete_os_disk_on_termination = true
 
   storage_image_reference {
@@ -105,36 +110,40 @@ resource "azurerm_virtual_machine" "iAr" {
   }
 }
 
+// Load Balancer
 resource "azurerm_lb" "iAr" {
   name                = var.lb_name
   resource_group_name = azurerm_resource_group.iAr.name
   location            = azurerm_resource_group.iAr.location
   sku                 = "Standard"
   frontend_ip_configuration {
-    name                 = "internal"
-    private_ip_address   = "10.0.1.4"
-    subnet_id            = azurerm_subnet.iAr.id
+    name               = "internal"
+    private_ip_address = "10.0.1.4"
+    subnet_id          = azurerm_subnet.iAr.id
   }
 }
 
+// Load Balancer Backend Address Pool
 resource "azurerm_lb_backend_address_pool" "iAr" {
   name                = var.lb_pool_name
   resource_group_name = azurerm_resource_group.iAr.name
   loadbalancer_id     = azurerm_lb.iAr.id
 }
 
+// Load Balancer Backend Address Pool Backend Addresses
 resource "azurerm_lb_backend_address_pool_backend_address" "iAr" {
-  count               = var.vm_count
-  name                = "${var.lb_pool_backend_name}-${count.index}"
-  resource_group_name = azurerm_resource_group.iAr.name
-  loadbalancer_id     = azurerm_lb.iAr.id
+  count                   = var.vm_count
+  name                    = "${var.lb_pool_backend_name}-${count.index}"
+  resource_group_name     = azurerm_resource_group.iAr.name
+  loadbalancer_id         = azurerm_lb.iAr.id
   backend_address_pool_id = azurerm_lb_backend_address_pool.iAr.id
-  ip_configuration_id    = azurerm_network_interface.iAr[count.index].ip_configuration[0].id
+  ip_configuration_id     = azurerm_network_interface.iAr[count.index].ip_configuration[0].id
 }
 
+// Network Interface Backend Address Pool Association
 resource "azurerm_network_interface_backend_address_pool_association" "iAr" {
-  count                = var.vm_count
-  network_interface_id = azurerm_network_interface.iAr[count.index].id
-  ip_configuration_name = azurerm_network_interface.iAr[count.index].ip_configuration[0].name
+  count                   = var.vm_count
+  network_interface_id    = azurerm_network_interface.iAr[count.index].id
+  ip_configuration_name   = azurerm_network_interface.iAr[count.index].ip_configuration[0].name
   backend_address_pool_id = azurerm_lb_backend_address_pool.iAr.id
 }
