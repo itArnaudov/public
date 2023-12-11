@@ -1,3 +1,8 @@
+#24
+//going to delete this file. azurerm changes causing the sample below to be fundamentally wrong and needing a complete rebuild. 
+//submitting a new sample file that also includes underlying vnet and couple of vms attached to it, for better representation of this excersise 
+//thank you.  
+#
 provider "azurerm" {
   features {}
 }
