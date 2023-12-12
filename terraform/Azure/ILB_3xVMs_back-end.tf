@@ -1,5 +1,5 @@
 provider "azurerm" {
-  features = {}
+  features {}
 }
 
 variable "resource_group_name" {
@@ -125,9 +125,9 @@ resource "azurerm_lb" "iAr" {
 
 // Load Balancer Backend Address Pool
 resource "azurerm_lb_backend_address_pool" "iAr" {
-  name                = var.lb_pool_name
-  resource_group_name = azurerm_resource_group.iAr.name
-  loadbalancer_id     = azurerm_lb.iAr.id
+  name = var.lb_pool_name
+  //resource_group_name = azurerm_resource_group.iAr.name
+  loadbalancer_id = azurerm_lb.iAr.id
 }
 
 // Load Balancer Backend Address Pool Backend Addresses
