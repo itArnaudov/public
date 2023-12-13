@@ -1,0 +1,10 @@
+// To find all virtual machine hostnames connected to a Virtual Network (VNet) using Kusto Query Language (KQL) in Azure Monitor, you can use the `AzureNetworkAnalytics` table. 
+//Here's an example query:
+AzureNetworkAnalytics
+| where ResourceType == "NIC"
+| where TrafficType == "Internal"
+| extend vmId = tostring(split(tostring(customDimensions), "VMName\":\"")[1])
+| extend vnetName = tostring(split(tostring(customDimensions), "VirtualNetwork\":\"")[1])
+| extend hostname = tostring(split(tostring(customDimensions), "VMIPAddress\":\"")[1])
+| project vmName = vmId, virtualNetwork = vnetName, hostName = hostname
+| distinct vmName, virtualNetwork, hostName
