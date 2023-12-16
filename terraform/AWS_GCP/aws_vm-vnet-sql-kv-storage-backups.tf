@@ -182,3 +182,132 @@ resource "aws_instance" "iAr-app-01-vm" {
     ]
   }
 }
+resource "aws_storage_account" "iAr-app-01-storage-account" {
+  name                  = "iAr-app-01-storage-account"
+  account_replication_type = "LRS"
+}
+
+resource "aws_backup_policy" "iAr-app-01-backup-policy" {
+  name            = "iAr-app-01-backup-policy"
+  resource_type   = "AWSEC2_VM"
+  schedule_expression = "cron(0 12 ? * * *)" # Backup every day at noon
+  retention_days        = 7 # Keep backups for 7 days
+
+  target {
+    resources = [
+      aws_instance.iAr-app-01-vm.id,
+    ]
+
+    backup_window = "PT12H" # Backups will be created within a 12-hour window
+  }
+}
+
+resource "aws_instance" "iAr-app-01-vm" {
+  ami           = "ami-0c5e492176883c469"
+  instance_type = "t2.micro"
+  key_name = "iAr-app-01-key-pair"
+
+  # Create a second disk named "F:" and attaches it to the virtual machine
+  block_devices = [
+    {
+      device_name = "/dev/sdb"
+      volume_type = "gp2"
+      volume_size = "1024"
+    }
+  ]
+
+  # Enable boot diagnostics for the virtual machine and specify the storage account to use for storing boot diagnostics
+  monitoring = {
+    enabled = true
+  }
+
+  # Configure Windows features
+  windows_configuration {
+    enable_automatic_updates = true
+    password = "Pa$$word1234!"
+  }
+
+  # Install SQL Server on the virtual machine
+  provisioner "remote-exec" {
+    inline = [
+      "Add-WindowsFeature RSAT-TcpIp-Client",
+      "New-NetFirewallRule `
+       -DisplayName 'Remote SQL Server TCP Port 1433' `
+       -Direction Inbound `
+       -Protocol TCP `
+       -LocalPort 1433 `
+       -Action Allow `
+       -Profile Any `
+       -EdgeTraversal Allow",
+      "Restart-Service WinRM",
+    ]
+  }
+}
+resource "aws_storage_account" "iAr-app-01-storage-account" {
+  name                  = "iAr-app-01-storage-account"
+  account_replication_type = "LRS"
+}
+
+resource "aws_security_group" "iAr-app-01-sg" {
+  name        = "iAr-app-01-sg"
+  description = "Allow ssh and remote SQL access from known IP addresses"
+
+  ingress {
+    from_port        = 22
+    to_port          = 22
+    protocol        = "tcp"
+    cidr_blocks     = ["10.0.0.0/16", "192.168.1.0/24"]
+  }
+
+  ingress {
+    from_port   = 1433
+    to_port     = 1433
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16", "192.168.1.0/24"]
+  }
+}
+
+resource "aws_instance" "iAr-app-01-vm" {
+  ami                   = "ami-0c5e492176883c469"
+  instance_type         = "t2.micro"
+  key_name              = "iAr-app-01-key-pair"
+  monitoring             = {
+    enabled = true
+  }
+
+  # Create a second disk named "F:" and attaches it to the virtual machine
+  block_devices = [
+    {
+      device_name = "/dev/sdb"
+      volume_type = "gp2"
+      volume_size = "1024"
+    }
+  ]
+
+  # Configure Windows features
+  windows_configuration {
+    enable_automatic_updates = true
+
+    # Set a strong password for the administrator account
+    password = "Pa$$word1234!"
+  }
+
+  # Configure Windows firewall rules
+  security_group_ids = [aws_security_group.iAr-app-01-sg.id]
+
+  # Install SQL Server on the virtual machine
+  provisioner "remote-exec" {
+    inline = [
+      "Add-WindowsFeature RSAT-TcpIp-Client",
+      "New-NetFirewallRule `
+       -DisplayName 'Remote SQL Server TCP Port 1433' `
+       -Direction Inbound `
+       -Protocol TCP `
+       -LocalPort 1433 `
+       -Action Allow `
+       -Profile Any `
+       -EdgeTraversal Allow",
+      "Restart-Service WinRM",
+    ]
+  }
+}
