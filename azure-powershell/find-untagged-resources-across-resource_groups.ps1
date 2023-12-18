@@ -1,5 +1,5 @@
 #This script iterates through all resource groups in the subscription and checks each resource within those groups for the presence of the specified tag. Resources without the specified tag are then listed at the end. Remember to replace "YourTagKey" with your actual tag key.
-
+#
 # Install Azure PowerShell module if not already installed
 # Install-Module -Name Az -AllowClobber -Force -Scope CurrentUser
 

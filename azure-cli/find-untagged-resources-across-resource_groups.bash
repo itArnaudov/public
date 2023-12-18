@@ -34,3 +34,4 @@ else
     echo "All resources across all resource groups have the tag '$tagKey'."
 fi
 #
+#
