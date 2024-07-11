@@ -1,3 +1,4 @@
+#================================================= Export arc machine IDs from RG1 into a csv file 
 # Connect to Azure (ensure you're logged in and have proper permissions)
 Connect-AzAccount
 
@@ -23,5 +24,40 @@ Out-File -FilePath $csvFilePath -InputObject $csvContent -Encoding UTF8
 Write-Host "Machine IDs exported successfully to: $csvFilePath"
 
 
-#==============
+#============================================ read csv file and move each object from RG1 to RG3 
 
+# Connect to Azure (ensure you're logged in and have proper permissions)
+Connect-AzAccount
+
+# Set the CSV file path (modify as needed)
+$csvFilePath = "C:\path\to\machine_ids.csv"
+
+# Import CSV content (assuming header row with "MachineId")
+$machineIds = Import-Csv -Path $csvFilePath | Select-Object -ExpandProperty MachineId
+
+# Loop through each machine ID
+foreach ($machineId in $machineIds) {
+  # Try-Catch block for error handling
+  try {
+    # Get the hybrid machine by ID
+    $machine = Get-AzResource -ResourceId "Microsoft.HybridMachine/machines/$machineId"
+
+    # Move the machine to the new resource group (RG3)
+    Move-AzResource -ResourceId $machine.Id -DestinationResourceGroupName "RG3"
+
+    Write-Host "Successfully moved machine $machineId to RG3"
+  }
+  catch {
+    Write-Warning "Error moving machine $machineId: $_"
+  }
+}
+
+Write-Host "Machine movement completed."
+
+#
+#
+#
+#
+#
+#
+#
