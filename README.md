@@ -1,2 +1,5 @@
 # public
-code samples from recent projects
+👩‍💻code samples from recent projects 
+
+> [!NOTE]  
+> excercise 💡 caution 💡

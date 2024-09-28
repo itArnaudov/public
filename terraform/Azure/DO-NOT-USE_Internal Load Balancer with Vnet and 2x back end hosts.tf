@@ -7,11 +7,13 @@ provider "azurerm" {
   features {}
 }
 
+# Resource group
 resource "azurerm_resource_group" "example" {
   name     = "my-resource-group"
   location = "West US"
 }
 
+# Virtual network
 resource "azurerm_virtual_network" "example" {
   name                = "my-vnet"
   address_space       = ["10.0.0.0/16"]
@@ -19,6 +21,7 @@ resource "azurerm_virtual_network" "example" {
   resource_group_name = azurerm_resource_group.example.name
 }
 
+# Subnet
 resource "azurerm_subnet" "example" {
   name                 = "my-subnet"
   resource_group_name  = azurerm_resource_group.example.name
@@ -26,6 +29,7 @@ resource "azurerm_subnet" "example" {
   address_prefixes     = ["10.0.0.0/24"]
 }
 
+# Load Balancer (Internal)
 resource "azurerm_lb" "internal" {
   name                = "my-internal-lb"
   resource_group_name = azurerm_resource_group.example.name
@@ -53,20 +57,22 @@ resource "azurerm_lb" "internal" {
 
   load_balancing_rule {
     name                      = "lb-rule"
+    frontend_ip_configuration = "internal-ip"
     frontend_port             = 80
     backend_port              = 80
     protocol                  = "Tcp"
-    frontend_ip_configuration = azurerm_lb.internal.frontend_ip_configuration[0].name
-    backend_address_pool      = azurerm_lb.internal.backend_address_pool[0].name
-    probe                     = azurerm_lb.internal.probe[0].name
+    backend_address_pool_id   = azurerm_lb.internal.backend_address_pool[0].id
+    probe_id                  = azurerm_lb.internal.probe[0].id
   }
 }
 
+# Data block to retrieve existing storage account (for boot diagnostics)
 data "azurerm_storage_account" "example" {
-  name                = "<storage_account_name>"
-  resource_group_name = "<storage_account_resource_group>"
+  name                = "my-storage-account" # Replace with your actual storage account name
+  resource_group_name = azurerm_resource_group.example.name
 }
 
+# Network interface for the VMs
 resource "azurerm_network_interface" "example" {
   count               = 2
   name                = "my-nic-${count.index}"
@@ -80,6 +86,7 @@ resource "azurerm_network_interface" "example" {
   }
 }
 
+# Virtual Machines
 resource "azurerm_virtual_machine" "example" {
   count                 = 2
   name                  = "my-vm-${count.index}"
@@ -113,18 +120,12 @@ resource "azurerm_virtual_machine" "example" {
     provision_vm_agent        = true
   }
 
-  #  boot_diagnostics {
-  #    enabled            = true
-  #    storage_account_uri = data.azurerm_storage_account.example
-  #  }
-
   boot_diagnostics {
-    enabled             = true
-    storage_account_uri = azurerm_storage_account.example.primary_blob_endpoint
+    storage_account_uri = data.azurerm_storage_account.example.primary_blob_endpoint
   }
 
   tags = {
     environment = "production"
   }
 }
-
+#
