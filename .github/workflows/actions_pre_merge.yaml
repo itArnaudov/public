@@ -1,0 +1,121 @@
+name: Pre-merge checks
+
+on:
+  - pull_request
+
+jobs:
+  check_labels:
+    name: itAr_Check required labels
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: itAr_Check required labels
+        uses: docker://agilepathway/pull-request-label-checker:latest
+        with:
+          one_of: major,minor,patch
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+  docs_and_versions:
+    name: itAr_Update docs and versions
+    runs-on: ubuntu-latest
+    needs:
+      - check_labels
+
+    steps:
+      - name: itAr_Fix .git owner
+        run: if test -d .git; then sudo chown ubuntu:ubuntu -R .git; fi
+
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: itAr_Get Previous tag
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1.4.0"
+        with:
+          fallback: 0.0.0
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: itAr_Get next version
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@v1"
+        with:
+          version: ${{ steps.previoustag.outputs.tag }}
+
+      - name: itAr_Update cloud_module tag major version
+        if: contains(github.event.pull_request.labels.*.name, 'major')
+        run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.major }}"
+
+      - name: itAr_Update cloud_module tag minor version
+        if: contains(github.event.pull_request.labels.*.name, 'minor')
+        run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.minor }}"
+
+      - name: itAr_Update cloud_module tag patch version
+        if: contains(github.event.pull_request.labels.*.name, 'patch')
+        run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.patch }}"
+
+      - name: itAr_Install Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: itAr_Run terraform fmt
+        id: fmt
+        run: terraform fmt -diff -recursive
+
+      - name: itAr_Render terraform docs
+        uses: terraform-docs/gh-actions@v1.3.0
+        with:
+          config-file: .github/config/terraform-docs.yaml
+
+      - name: itAr_Fix .git owner
+        run: | 
+          sudo chown -R "${USER:-$(id -un)}" .
+        #  sudo chmod -R ugo+rwX .
+        # sudo useradd ubuntu
+        # sudo usermod -aG ubuntu ubuntu
+        # sudo chown ubuntu:ubuntu -R .git
+        # sudo chmod -R 755 .git
+        # ls -l .git
+        # sudo usermod -aG sudo ubuntu
+
+      - name: itAr_Add & Commit
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: github-actions
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: "CI Workflow append updates"
+
+  validate_and_lint:
+    name: itAr_Run terraform validate and TFLint
+    runs-on: ubuntu-latest
+    needs:
+      - check_labels
+      - docs_and_versions
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: bendrucker/terraform-configuration-aliases-action@v1
+
+      - name: itAr_Run terraform init
+        run: terraform init
+
+      - name: itAr_Run terraform validate
+        run: terraform validate
+
+      - name: itAr_Run TFLint
+        uses: reviewdog/action-tflint@v1.23.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check # default annotation is added to the line
+         # reporter: github-pr-review # a comment is added to the Pull Request Conversation
+         # working_directory: subfolder
+          tflint_version: "v0.49.0"
+          filter_mode: nofilter
+          tflint_init: true
+          fail_on_error: false
+          flags: "--module --recursive"
+          level: info  # change to info for more information
