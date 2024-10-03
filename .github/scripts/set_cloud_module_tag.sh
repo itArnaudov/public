@@ -33,6 +33,7 @@
 # This script is used to ensure the cloud_module tag is set and at the correct version.
 
 # Set vars
+
 while getopts p:v: flag
 do
     case "${flag}" in
@@ -43,7 +44,7 @@ done
 
 rendered_version=$(echo $version | sed 's/\./-/g')
 
-var_file=$(find "$ws_path" -maxdepth 2 -type f -name "variables.tf" -o -name "_variables.tf" -o -name "vars.tf" -o -name "_vars.tf")
+var_file=$(find "$ws_path" -maxdepth 3 -type f -name "variables.tf" -o -name "_variables.tf" -o -name "vars.tf" -o -name "_vars.tf")
 
 if [[ -z "$var_file" ]]; then
     echo "No variables file found"
