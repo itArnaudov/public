@@ -1,0 +1,18 @@
+output:
+  file: README.md
+  mode: inject
+
+settings:
+  hide-empty: true
+
+sort:
+  enabled: true
+  by: required
+
+sections:
+  show:
+    - providers
+    - inputs
+    - outputs
+    - resources
+    - modules
