@@ -4,7 +4,7 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "iAr-private124_rg" {
   name     = "iAr-private124-rg"
-  location = "East US"  # Change to your desired Azure region
+  location = "East US" # Change to your desired Azure region
 }
 
 resource "azurerm_dns_zone" "iAr-private124_dns" {
@@ -67,7 +67,7 @@ resource "azurerm_dns_a_record" "iAr-www" {
   zone_name           = azurerm_dns_zone.private124_dns.name
   resource_group_name = azurerm_resource_group.private124_rg.name
   ttl                 = 3600
-  records             = ["192.0.2.1"]  # Change to your web server IP address
+  records             = ["192.0.2.1"] # Change to your web server IP address
 }
 
 output "dns_zone_id" {
