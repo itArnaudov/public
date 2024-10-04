@@ -19,7 +19,7 @@ resource "aws_security_group" "iAr" {
   # Allow SSH access from anywhere
   ingress {
     from_port   = 22
-    to_port    = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -27,7 +27,7 @@ resource "aws_security_group" "iAr" {
   # Allow all outbound traffic
   egress {
     from_port   = 0
-    to_port    = 65535
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -35,8 +35,8 @@ resource "aws_security_group" "iAr" {
 
 resource "aws_volume" "iAr" {
   availability_zone = "eu-west-2a"
-  type = "gp2"
-  size = 10
+  type              = "gp2"
+  size              = 10
 }
 
 resource "aws_network_interface" "iAr" {
