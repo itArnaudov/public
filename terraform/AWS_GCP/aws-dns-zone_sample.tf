@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"  # Change to your desired AWS region
+  region = "us-east-1" # Change to your desired AWS region
 }
 
 resource "aws_route53_zone" "iAr_private124_dns" {
@@ -59,7 +59,7 @@ resource "aws_route53_record" "iAr_www" {
   name    = "www"
   type    = "A"
   ttl     = 3600
-  records = ["192.0.2.1"]  # Change to your web server IP address
+  records = ["192.0.2.1"] # Change to your web server IP address
 }
 
 output "dns_zone_id" {

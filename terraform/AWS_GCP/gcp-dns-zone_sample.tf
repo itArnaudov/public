@@ -1,7 +1,7 @@
 provider "google" {
   credentials = file("<path_to_your_gcp_credentials_file>")
   project     = "your-gcp-project-id"
-  region      = "us-central1"  # Change to your desired GCP region
+  region      = "us-central1" # Change to your desired GCP region
 }
 
 resource "google_dns_managed_zone" "iar_private124_dns" {
@@ -63,5 +63,5 @@ resource "google_dns_record_set" "iar_www" {
   name         = "www"
   type         = "A"
   ttl          = 3600
-  rrdatas      = ["192.0.2.1"]  # Change to your web server IP address
+  rrdatas      = ["192.0.2.1"] # Change to your web server IP address
 }

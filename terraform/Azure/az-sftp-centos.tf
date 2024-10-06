@@ -4,7 +4,7 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "iAr" {
   name     = "iAr-sftp-rg"
-  location = "East US"  # Change to your desired Azure region
+  location = "East US" # Change to your desired Azure region
 }
 
 resource "azurerm_virtual_network" "iAr" {
@@ -36,9 +36,9 @@ resource "azurerm_linux_virtual_machine" "iAr" {
   name                = "iAr-sftp-vm"
   resource_group_name = azurerm_resource_group.iAr.name
   location            = azurerm_resource_group.iAr.location
-  size                = "Standard_DS1_v2"  # Change to your desired VM size
+  size                = "Standard_DS1_v2" # Change to your desired VM size
   admin_username      = "iarsftpadmin"
-  admin_password      = "SuperSecretPassword123!"  # Change to your desired password
+  admin_password      = "SuperSecretPassword123!" # Change to your desired password
 
   network_interface_ids = [azurerm_network_interface.iAr.id]
 
@@ -85,19 +85,19 @@ resource "azurerm_network_interface_security_group_association" "iAr_nic_nsg_ass
 }
 
 resource "azurerm_key_vault" "iAr_kv" {
-  name                        = "iAr-sftp-keyvault"
-  resource_group_name         = azurerm_resource_group.iAr.name
-  location                    = azurerm_resource_group.iAr.location
-  enabled_for_disk_encryption = false
-  enabled_for_deployment      = true
+  name                            = "iAr-sftp-keyvault"
+  resource_group_name             = azurerm_resource_group.iAr.name
+  location                        = azurerm_resource_group.iAr.location
+  enabled_for_disk_encryption     = false
+  enabled_for_deployment          = true
   enabled_for_template_deployment = true
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  sku_name                    = "standard"
+  tenant_id                       = data.azurerm_client_config.current.tenant_id
+  sku_name                        = "standard"
 }
 
 resource "azurerm_key_vault_secret" "iAr_cert_secret" {
   name         = "iAr-sftp-cert"
-  value        = filebase64("path/to/your/certificate.pem")  # Change to the path of your certificate
+  value        = filebase64("path/to/your/certificate.pem") # Change to the path of your certificate
   key_vault_id = azurerm_key_vault.iAr_kv.id
 }
 
