@@ -3,3 +3,7 @@
 
 > [!NOTE]  
 > excercise 💡 caution 💡
+
+<!-- BEGIN_TF_DOCS -->
+
+<!-- END_TF_DOCS -->
