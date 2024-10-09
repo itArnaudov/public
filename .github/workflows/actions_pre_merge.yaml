@@ -84,7 +84,7 @@ jobs:
         with:
           author_name: github-actions
           author_email: 41898282+github-actions[bot]@users.noreply.github.com
-          message: "CI Workflow append updates"
+          message: "CI Workflow append updates, GitHub Actions"
 
   validate_and_lint:
     name: itAr_Run terraform validate and TFLint
