@@ -98,7 +98,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - uses: bendrucker/terraform-configuration-aliases-action@v1
+      - uses: bendrucker/terraform-configuration-aliases-action@v1.3.0
 
       - name: itAr_Run terraform init
         run: terraform init
@@ -117,5 +117,5 @@ jobs:
           filter_mode: nofilter
           tflint_init: true
           fail_on_error: false
-          flags: "--module --recursive"
+          flags: "--module --recursive --call-module-type=local" # tflint --recursive --call-module-type=local
           level: info  # change to info for more information
