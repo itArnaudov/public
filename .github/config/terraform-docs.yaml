@@ -3,7 +3,7 @@ output:
   mode: inject
 
 settings:
-  hide-empty: true
+  hide-empty: false #true
 
 sort:
   enabled: true
