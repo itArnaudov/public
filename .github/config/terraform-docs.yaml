@@ -4,7 +4,13 @@ output:
 
 settings:
   hide-empty: false #true
-  recursive: true
+  # recursive: true
+
+recursive:
+  enabled: true
+  # path: terraform
+  include-main: true
+
 
 sort:
   enabled: true
