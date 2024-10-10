@@ -1,10 +1,11 @@
 output:
-  file: README.md
+  file: ./README.md
   mode: inject
 
 settings:
   hide-empty: false #true
   # recursive: true
+  # working-dir: .,terraform/azure,terraform/azure/az_modules/gcp_dns_zone,terraform/aws_gcp
 
 # recursive:
 #   enabled: true
