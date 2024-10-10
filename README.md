@@ -6,6 +6,7 @@
 
 ## stats
 
+<!--  [![Currently](https://github.com/itArnaudov/public/actions/workflows/actions_pre_merge.yaml/badge.svg)](https://github.com/itArnaudov/public/actions?query=workflow%3Apre-merge%20checks)  -->
 
 ![example workflow](https://github.com/itArnaudov/public/actions/workflows/actions_pre_merge.yaml/badge.svg?style=plastic)
 
@@ -29,7 +30,6 @@
 > [!IMPORTANT] 
 > To build example
 > 
-
 
 </details>
 
