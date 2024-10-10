@@ -22,6 +22,17 @@
 
 [![License: GNU GPL 3.0](https://img.shields.io/badge/License-GNU%20GPL%203.0-blue.svg?style=plastic)](LICENSE)
 
+<details><summary><b>example dropdown</b></summary><br>
+
+**Example**:
+
+> [!IMPORTANT] 
+> To build example
+> 
+
+
+</details>
+
 
 
 <!-- BEGIN_TF_DOCS -->
