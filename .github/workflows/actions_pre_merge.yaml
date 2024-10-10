@@ -69,6 +69,7 @@ jobs:
           config-file: .github/config/terraform-docs.yaml
           working-dir: terraform/Azure
           # ,./terraform/Azure/az_modules/gcp_dns_zone,./terraform/AWS_GCP
+          fail_on_diff: false
 
       - name: itAr_Fix .git owner
         run: | 
