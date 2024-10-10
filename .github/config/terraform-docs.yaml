@@ -9,7 +9,7 @@ settings:
 
 # recursive:
 #   enabled: true
-  # path: terraform
+#   path: terraform
 #   include-main: true
 
 
