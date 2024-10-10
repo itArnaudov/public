@@ -67,7 +67,8 @@ jobs:
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           config-file: .github/config/terraform-docs.yaml
-          working-dir: terraform/Azure # ,./terraform/Azure/az_modules/gcp_dns_zone,./terraform/AWS_GCP
+          working-dir: terraform/Azure
+          # ,./terraform/Azure/az_modules/gcp_dns_zone,./terraform/AWS_GCP
 
       - name: itAr_Fix .git owner
         run: | 
