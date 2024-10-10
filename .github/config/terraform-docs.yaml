@@ -3,7 +3,15 @@ output:
   mode: inject
 
 settings:
-  hide-empty: true
+  hide-empty: false #true
+  # recursive: true
+  # working-dir: .,terraform/azure,terraform/azure/az_modules/gcp_dns_zone,terraform/aws_gcp
+
+# recursive:
+#   enabled: true
+#   path: terraform
+#   include-main: true
+
 
 sort:
   enabled: true
