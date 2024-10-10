@@ -6,8 +6,8 @@ settings:
   hide-empty: false #true
   # recursive: true
 
-recursive:
-  enabled: true
+# recursive:
+#   enabled: true
   # path: terraform
 #   include-main: true
 
