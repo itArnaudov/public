@@ -3,7 +3,14 @@ output:
   mode: inject
 
 settings:
-  hide-empty: true
+  hide-empty: false #true
+  # recursive: true
+
+# recursive:
+#   enabled: true
+  # path: terraform
+#   include-main: true
+
 
 sort:
   enabled: true
