@@ -67,7 +67,7 @@ jobs:
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           config-file: .github/config/terraform-docs.yaml
-          working-dir: ./terraform/Azure # ,./terraform/Azure/az_modules/gcp_dns_zone,./terraform/AWS_GCP
+          working-dir: terraform/Azure # ,./terraform/Azure/az_modules/gcp_dns_zone,./terraform/AWS_GCP
 
       - name: itAr_Fix .git owner
         run: | 
@@ -119,5 +119,5 @@ jobs:
           filter_mode: nofilter
           tflint_init: true
           fail_on_error: false
-          flags: "--module --recursive --call-module-type=local" # tflint --recursive --call-module-type=local
+          flags: "--module --recursive --call-module-type=all" # local" # tflint --recursive --call-module-type=local
           level: info  # change to info for more information
