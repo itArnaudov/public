@@ -80,7 +80,7 @@ jobs:
         # sudo usermod -aG sudo ubuntu
 
       - name: itAr_Add & Commit
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v9.1.4
         with:
           author_name: github-actions
           author_email: 41898282+github-actions[bot]@users.noreply.github.com
