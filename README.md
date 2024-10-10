@@ -23,14 +23,22 @@
 
 [![License: GNU GPL 3.0](https://img.shields.io/badge/License-GNU%20GPL%203.0-blue.svg?style=plastic)](LICENSE)
 
-<details><summary><b>example dropdown</b></summary><br>
+<details markdown="1"><summary markdown="span"><b>example dropdown</b></summary><br>
+  <div markdown=1>
 
 **Example**:
 
-> [!IMPORTANT] 
-> To build example
-> 
 
+  ```go
+  func main() {}
+  ```
+
+>- Test
+>- build 
+
+$$1+1=2$$ 
+
+  </div>
 </details>
 
 
