@@ -4,6 +4,7 @@ output:
 
 settings:
   hide-empty: false #true
+  recursive: true
 
 sort:
   enabled: true
