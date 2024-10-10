@@ -71,6 +71,7 @@ jobs:
       - name: itAr_Fix .git owner
         run: | 
           sudo chown -R "${USER:-$(id -un)}" .
+          echo "TDAY_DATE=$(date +'%d-%M-%Y_%H:%M:%S')" >> $GITHUB_ENV
         #  sudo chmod -R ugo+rwX .
         # sudo useradd ubuntu
         # sudo usermod -aG ubuntu ubuntu
@@ -84,7 +85,7 @@ jobs:
         with:
           author_name: github-actions
           author_email: 41898282+github-actions[bot]@users.noreply.github.com
-          message: "CI Workflow append updates, GitHub Actions"
+          message: "CI Workflow append updates, GitHub Actions ${{ env.TDAY_DATE }}"
 
   validate_and_lint:
     name: itAr_Run terraform validate and TFLint
