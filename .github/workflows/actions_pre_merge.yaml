@@ -44,17 +44,17 @@ jobs:
         with:
           version: ${{ steps.previoustag.outputs.tag }}
 
-      - name: itAr_Update cloud_module tag major version
-        if: contains(github.event.pull_request.labels.*.name, 'major')
-        run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.major }}"
+      # - name: itAr_Update cloud_module tag major version
+      #   if: contains(github.event.pull_request.labels.*.name, 'major')
+      #   run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.major }}"
 
-      - name: itAr_Update cloud_module tag minor version
-        if: contains(github.event.pull_request.labels.*.name, 'minor')
-        run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.minor }}"
+      # - name: itAr_Update cloud_module tag minor version
+      #   if: contains(github.event.pull_request.labels.*.name, 'minor')
+      #   run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.minor }}"
 
-      - name: itAr_Update cloud_module tag patch version
-        if: contains(github.event.pull_request.labels.*.name, 'patch')
-        run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.patch }}"
+      # - name: itAr_Update cloud_module tag patch version
+      #   if: contains(github.event.pull_request.labels.*.name, 'patch')
+      #   run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.patch }}"
 
       - name: itAr_Install Terraform
         uses: hashicorp/setup-terraform@v3
