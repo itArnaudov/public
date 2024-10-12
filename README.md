@@ -44,22 +44,20 @@ $$1+1=2$$
 
 
 <!-- BEGIN_TF_DOCS -->
-## Providers
 
-No providers.
-
-## Modules
-
-No modules.
-
+## Usage
+Basic usage of this module is as follows:
+```hcl
+module "example" {
+  	 source  = "<module-path>"
+}
+```
 ## Resources
 
 No resources.
-
 ## Inputs
 
 No inputs.
-
 ## Outputs
 
 No outputs.
