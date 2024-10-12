@@ -44,17 +44,17 @@ jobs:
         with:
           version: ${{ steps.previoustag.outputs.tag }}
 
-      - name: itAr_Update cloud_module tag major version
-        if: contains(github.event.pull_request.labels.*.name, 'major')
-        run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.major }}"
+      # - name: itAr_Update cloud_module tag major version
+      #   if: contains(github.event.pull_request.labels.*.name, 'major')
+      #   run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.major }}"
 
-      - name: itAr_Update cloud_module tag minor version
-        if: contains(github.event.pull_request.labels.*.name, 'minor')
-        run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.minor }}"
+      # - name: itAr_Update cloud_module tag minor version
+      #   if: contains(github.event.pull_request.labels.*.name, 'minor')
+      #   run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.minor }}"
 
-      - name: itAr_Update cloud_module tag patch version
-        if: contains(github.event.pull_request.labels.*.name, 'patch')
-        run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.patch }}"
+      # - name: itAr_Update cloud_module tag patch version
+      #   if: contains(github.event.pull_request.labels.*.name, 'patch')
+      #   run: sh ${GITHUB_WORKSPACE}/.github/scripts/set_cloud_module_tag.sh -p "${GITHUB_WORKSPACE}" -v "${{ steps.semvers.outputs.patch }}"
 
       - name: itAr_Install Terraform
         uses: hashicorp/setup-terraform@v3
@@ -67,10 +67,14 @@ jobs:
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           config-file: .github/config/terraform-docs.yaml
+          # output-file: ../../README.md
+          working-dir: . # terraform/Azure
+          # ,./terraform/Azure/az_modules/gcp_dns_zone,./terraform/AWS_GCP
 
       - name: itAr_Fix .git owner
         run: | 
           sudo chown -R "${USER:-$(id -un)}" .
+          echo "TDAY_DATE=$(date +'%d-%b-%Y_%H:%M:%S')" >> $GITHUB_ENV
         #  sudo chmod -R ugo+rwX .
         # sudo useradd ubuntu
         # sudo usermod -aG ubuntu ubuntu
@@ -80,11 +84,11 @@ jobs:
         # sudo usermod -aG sudo ubuntu
 
       - name: itAr_Add & Commit
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v9.1.4
         with:
           author_name: github-actions
           author_email: 41898282+github-actions[bot]@users.noreply.github.com
-          message: "CI Workflow append updates"
+          message: "CI Workflow append updates, GitHub Actions ${{ env.TDAY_DATE }}"
 
   validate_and_lint:
     name: itAr_Run terraform validate and TFLint
@@ -98,7 +102,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - uses: bendrucker/terraform-configuration-aliases-action@v1
+      - uses: bendrucker/terraform-configuration-aliases-action@v1.3.0
 
       - name: itAr_Run terraform init
         run: terraform init
@@ -117,5 +121,5 @@ jobs:
           filter_mode: nofilter
           tflint_init: true
           fail_on_error: false
-          flags: "--module --recursive"
+          flags: "--module --recursive --call-module-type=all" # local" # tflint --recursive --call-module-type=local
           level: info  # change to info for more information
