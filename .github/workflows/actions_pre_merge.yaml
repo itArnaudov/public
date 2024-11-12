@@ -7,6 +7,17 @@ jobs:
   check_labels:
     name: itAr_Check required labels
     runs-on: ubuntu-latest
+    #  permissions:
+    #    actions: read|write|none
+    #    checks: read|write|none
+    #    contents: read|write|none
+    #    deployments: read|write|none
+    #    issues: read|write|none
+    #    packages: read|write|none
+    #    pull-requests: read|write|none
+    #    repository-projects: read|write|none
+    #    security-events: read|write|none
+    #    statuses: read|write|none
 
     steps:
       - name: itAr_Check required labels
@@ -18,6 +29,9 @@ jobs:
   docs_and_versions:
     name: itAr_Update docs and versions
     runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        pull-requests: write 
     needs:
       - check_labels
 
@@ -93,6 +107,9 @@ jobs:
   validate_and_lint:
     name: itAr_Run terraform validate and TFLint
     runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        pull-requests: write 
     needs:
       - check_labels
       - docs_and_versions
