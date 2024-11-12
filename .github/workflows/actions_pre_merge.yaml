@@ -29,9 +29,9 @@ jobs:
   docs_and_versions:
     name: itAr_Update docs and versions
     runs-on: ubuntu-latest
-      permissions:
-        contents: read
-        pull-requests: write 
+    #  permissions:
+    #    contents: read
+    #    pull-requests: write 
     needs:
       - check_labels
 
@@ -107,9 +107,9 @@ jobs:
   validate_and_lint:
     name: itAr_Run terraform validate and TFLint
     runs-on: ubuntu-latest
-      permissions:
-        contents: read
-        pull-requests: write 
+    #  permissions:
+    #    contents: read
+    #    pull-requests: write 
     needs:
       - check_labels
       - docs_and_versions
